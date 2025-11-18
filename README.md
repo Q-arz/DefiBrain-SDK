@@ -48,7 +48,12 @@ const tx = await client.executeAction({
 
 ## Documentation
 
-Full documentation available at: https://docs.defibrain.io
+- **[API Reference](./docs/API.md)** - Complete API documentation
+- **[Examples](./docs/EXAMPLES.md)** - Usage examples and code samples
+- **[Configuration](./docs/CONFIGURATION.md)** - Setup and configuration guide
+- **[Documentation Index](./docs/README.md)** - Full documentation index
+
+Full documentation also available at: https://docs.defibrain.io
 
 ## License
 
