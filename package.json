@@ -1,0 +1,34 @@
+{
+  "name": "@defibrain/sdk",
+  "version": "0.1.0",
+  "description": "DefiBrain SDK - Unified DeFi Router API Client",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "defi",
+    "ethereum",
+    "router",
+    "yield",
+    "optimization"
+  ],
+  "author": "DefiBrain",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/defibrain/sdk"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}
+
