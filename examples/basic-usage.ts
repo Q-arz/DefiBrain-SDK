@@ -11,7 +11,7 @@ async function main() {
   // Initialize client
   const client = new DefiBrainClient({
     apiKey: process.env.DEFIBRAIN_API_KEY || "test_free_key",
-    apiUrl: process.env.DEFIBRAIN_API_URL || "https://api.defibrain.io/v1",
+    apiUrl: process.env.DEFIBRAIN_API_URL || "https://backend-production-a565a.up.railway.app/v1",
     chainId: 1, // Ethereum mainnet
   });
 

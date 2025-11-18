@@ -16,7 +16,7 @@ import { DefiBrainClient } from '@defibrain/sdk';
 // Initialize client
 const client = new DefiBrainClient({
   apiKey: 'your-api-key',
-  apiUrl: 'https://api.defibrain.io/v1', // Optional, defaults to production
+  apiUrl: 'https://backend-production-a565a.up.railway.app/v1', // Optional, defaults to production
   chainId: 1, // Optional, defaults to Ethereum mainnet
 });
 
@@ -53,7 +53,7 @@ const tx = await client.executeAction({
 - **[Configuration](./docs/CONFIGURATION.md)** - Setup and configuration guide
 - **[Documentation Index](./docs/README.md)** - Full documentation index
 
-Full documentation also available at: https://docs.defibrain.io
+Full documentation also available at: https://defibrain.oxg.fi/docs.html
 
 ## License
 
@@ -61,7 +61,7 @@ MIT License - This SDK is open source.
 
 ## Support
 
-- Documentation: https://docs.defibrain.io
-- Discord: https://discord.gg/defibrain
-- Email: support@defibrain.io
+- Documentation: https://defibrain.oxg.fi/docs.html
+- Discord: https://discord.gg/TU724DzWpV
+- Website: https://defibrain.oxg.fi
 

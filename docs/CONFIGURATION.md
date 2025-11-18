@@ -8,7 +8,7 @@ Create a `.env` file in your project root:
 
 ```bash
 DEFIBRAIN_API_KEY=your-api-key-here
-DEFIBRAIN_API_URL=https://api.defibrain.io/v1
+DEFIBRAIN_API_URL=https://backend-production-a565a.up.railway.app/v1
 DEFIBRAIN_CHAIN_ID=1
 ```
 
@@ -29,7 +29,7 @@ const client = new DefiBrainClient({
 ```typescript
 const client = new DefiBrainClient({
   apiKey: process.env.DEFIBRAIN_API_KEY!,
-  apiUrl: 'https://api.defibrain.io/v1', // Optional, defaults to production
+  apiUrl: 'https://backend-production-a565a.up.railway.app/v1', // Optional, defaults to production
   chainId: 1, // Optional, defaults to Ethereum mainnet (1)
 });
 ```
@@ -37,14 +37,13 @@ const client = new DefiBrainClient({
 ## Configuration Options
 
 ### `apiKey` (required)
-Your DefiBrain API key. Get one at https://defibrain.io
+Your DefiBrain API key. Get one at https://defibrain.oxg.fi/api-register.html
 
 ### `apiUrl` (optional)
-API endpoint URL. Defaults to `https://api.defibrain.io/v1`
+API endpoint URL. Defaults to `https://backend-production-a565a.up.railway.app/v1`
 
 **Available endpoints:**
-- Production: `https://api.defibrain.io/v1`
-- Staging: `https://staging-api.defibrain.io/v1` (if available)
+- Production: `https://backend-production-a565a.up.railway.app/v1`
 - Local: `http://localhost:3000/v1` (for development)
 
 ### `chainId` (optional)
@@ -58,11 +57,10 @@ Blockchain network ID. Defaults to `1` (Ethereum Mainnet)
 
 ## Getting an API Key
 
-1. Visit https://defibrain.io
-2. Sign up for an account
-3. Navigate to API Keys section
-4. Create a new API key
-5. Copy and store securely
+1. Visit https://defibrain.oxg.fi/api-register.html
+2. Fill in your details (name, email, company)
+3. Get your free API key instantly (100 API calls/day)
+4. Copy and store securely
 
 ## Security Best Practices
 
@@ -147,5 +145,5 @@ import { DefiBrainClient } from '@defibrain/sdk';
 
 - See [API.md](./API.md) for complete API reference
 - See [EXAMPLES.md](./EXAMPLES.md) for usage examples
-- Visit https://docs.defibrain.io for full documentation
+- Visit https://defibrain.oxg.fi/docs.html for full documentation
 

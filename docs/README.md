@@ -36,10 +36,10 @@ DefiBrain is a unified DeFi router that integrates multiple protocols (Pendle, C
 
 ## 🔗 Resources
 
-- **Main Documentation**: https://docs.defibrain.io
+- **Main Documentation**: https://defibrain.oxg.fi/docs.html
+- **Website**: https://defibrain.oxg.fi
 - **GitHub Repository**: https://github.com/Q-arz/DefiBrain-SDK
-- **Support**: support@defibrain.io
-- **Discord**: https://discord.gg/defibrain
+- **Discord**: https://discord.gg/TU724DzWpV
 
 ## 📝 License
 

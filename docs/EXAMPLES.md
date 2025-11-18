@@ -9,7 +9,7 @@ import { DefiBrainClient } from '@defibrain/sdk';
 
 const client = new DefiBrainClient({
   apiKey: process.env.DEFIBRAIN_API_KEY!,
-  apiUrl: 'https://api.defibrain.io/v1',
+  apiUrl: 'https://backend-production-a565a.up.railway.app/v1',
   chainId: 1, // Ethereum mainnet
 });
 ```
