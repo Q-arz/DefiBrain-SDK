@@ -86,7 +86,7 @@ export class DefiBrainClient {
 
   constructor(config: DefiBrainConfig) {
     this.apiKey = config.apiKey;
-    this.apiUrl = config.apiUrl || "https://api.defibrain.io/v1";
+    this.apiUrl = config.apiUrl || "https://backend-production-a565a.up.railway.app/v1";
     this.chainId = config.chainId || 1;
   }
 
@@ -106,11 +106,11 @@ export class DefiBrainClient {
     });
 
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Failed to optimize yield");
+      const error: any = await response.json();
+      throw new Error(error.error?.message || error.message || "Failed to optimize yield");
     }
 
-    return await response.json();
+    return await response.json() as OptimizeYieldResponse;
   }
 
   /**
@@ -128,11 +128,11 @@ export class DefiBrainClient {
     });
 
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Failed to find optimal swap");
+      const error: any = await response.json();
+      throw new Error(error.error?.message || error.message || "Failed to find optimal swap");
     }
 
-    return await response.json();
+    return await response.json() as FindSwapResponse;
   }
 
   /**
@@ -150,11 +150,11 @@ export class DefiBrainClient {
     });
 
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Failed to execute action");
+      const error: any = await response.json();
+      throw new Error(error.error?.message || error.message || "Failed to execute action");
     }
 
-    return await response.json();
+    return await response.json() as ExecuteActionResponse;
   }
 
   /**
@@ -169,12 +169,12 @@ export class DefiBrainClient {
     );
 
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Failed to get protocols");
+      const error: any = await response.json();
+      throw new Error(error.error?.message || error.message || "Failed to get protocols");
     }
 
-    const data = await response.json();
-    return data.protocols;
+    const data: any = await response.json();
+    return data.protocols as string[];
   }
 
   /**
@@ -189,7 +189,7 @@ export class DefiBrainClient {
       throw new Error("Health check failed");
     }
 
-    return await response.json();
+    return await response.json() as HealthCheckResponse;
   }
 
   /**
@@ -206,11 +206,17 @@ export class DefiBrainClient {
     });
 
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Failed to get usage stats");
+      const error: any = await response.json();
+      throw new Error(error.error?.message || error.message || "Failed to get usage stats");
     }
 
-    return await response.json();
+    const data: any = await response.json();
+    return {
+      callsToday: data.stats?.callsToday || data.stats?.requestsToday || 0,
+      callsThisMonth: data.stats?.callsThisMonth || data.stats?.requestsThisMonth || 0,
+      limit: data.stats?.limit || 100,
+      resetDate: data.stats?.resetDate || new Date().toISOString(),
+    };
   }
 
   /**
