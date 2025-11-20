@@ -5,10 +5,13 @@
  * The SDK is open source, but the backend contains proprietary optimization logic.
  */
 
+import { retry, RetryOptions } from './utils/RetryHelper';
+
 export interface DefiBrainConfig {
   apiKey: string;
   apiUrl?: string;
   chainId?: number;
+  retryOptions?: RetryOptions;
 }
 
 export interface OptimizeYieldRequest {
@@ -83,11 +86,13 @@ export class DefiBrainClient {
   private apiKey: string;
   private apiUrl: string;
   private chainId: number;
+  private retryOptions: RetryOptions;
 
   constructor(config: DefiBrainConfig) {
     this.apiKey = config.apiKey;
     this.apiUrl = config.apiUrl || "https://backend-production-a565a.up.railway.app/v1";
     this.chainId = config.chainId || 1;
+    this.retryOptions = config.retryOptions || {};
   }
 
   /**
@@ -97,20 +102,22 @@ export class DefiBrainClient {
   async optimizeYield(
     request: OptimizeYieldRequest
   ): Promise<OptimizeYieldResponse> {
-    const response = await this.fetch("/optimize-yield", {
-      method: "POST",
-      body: JSON.stringify({
-        ...request,
-        chainId: this.chainId,
-      }),
-    });
+    return await retry(async () => {
+      const response = await this.fetch("/optimize-yield", {
+        method: "POST",
+        body: JSON.stringify({
+          ...request,
+          chainId: this.chainId,
+        }),
+      });
 
-    if (!response.ok) {
-      const error: any = await response.json();
-      throw new Error(error.error?.message || error.message || "Failed to optimize yield");
-    }
+      if (!response.ok) {
+        const error: any = await response.json().catch(() => ({}));
+        throw new Error(error.error?.message || error.message || "Failed to optimize yield");
+      }
 
-    return await response.json() as OptimizeYieldResponse;
+      return await response.json() as OptimizeYieldResponse;
+    }, this.retryOptions);
   }
 
   /**
@@ -119,20 +126,22 @@ export class DefiBrainClient {
   async findOptimalSwap(
     request: FindSwapRequest
   ): Promise<FindSwapResponse> {
-    const response = await this.fetch("/swap/optimal", {
-      method: "POST",
-      body: JSON.stringify({
-        ...request,
-        chainId: this.chainId,
-      }),
-    });
+    return await retry(async () => {
+      const response = await this.fetch("/swap/optimal", {
+        method: "POST",
+        body: JSON.stringify({
+          ...request,
+          chainId: this.chainId,
+        }),
+      });
 
-    if (!response.ok) {
-      const error: any = await response.json();
-      throw new Error(error.error?.message || error.message || "Failed to find optimal swap");
-    }
+      if (!response.ok) {
+        const error: any = await response.json().catch(() => ({}));
+        throw new Error(error.error?.message || error.message || "Failed to find optimal swap");
+      }
 
-    return await response.json() as FindSwapResponse;
+      return await response.json() as FindSwapResponse;
+    }, this.retryOptions);
   }
 
   /**
@@ -237,6 +246,20 @@ export class DefiBrainClient {
       ...options,
       headers,
     });
+  }
+
+  /**
+   * Get chain ID
+   */
+  getChainId(): number {
+    return this.chainId;
+  }
+
+  /**
+   * Set chain ID
+   */
+  setChainId(chainId: number): void {
+    this.chainId = chainId;
   }
 }
 

@@ -173,6 +173,45 @@ describe('DefiBrainClient', () => {
       );
     });
 
+    it('should retry on network errors', async () => {
+      jest.useFakeTimers();
+      
+      global.fetch = jest.fn()
+        .mockRejectedValueOnce(new Error('NetworkError'))
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({
+            protocol: 'aave',
+            action: 'supply',
+            params: {},
+            estimatedAPR: 5.5,
+            estimatedGas: '200000',
+            riskLevel: 'low',
+            confidence: 0.95,
+          }),
+        });
+
+      const clientWithRetry = new DefiBrainClient({
+        apiKey: API_KEY,
+        apiUrl: API_URL,
+        retryOptions: { maxRetries: 3, initialDelay: 1000 },
+      });
+
+      const promise = clientWithRetry.optimizeYield({
+        asset: '0x...',
+        amount: '1000000',
+      });
+
+      jest.advanceTimersByTime(1000);
+      await jest.runAllTimersAsync();
+      const result = await promise;
+
+      expect(result.protocol).toBe('aave');
+      expect(global.fetch).toHaveBeenCalledTimes(2);
+      
+      jest.useRealTimers();
+    }, 10000);
+
     it('should throw error if optimization fails', async () => {
       global.fetch = jest.fn().mockResolvedValue({
         ok: false,
@@ -347,6 +386,27 @@ describe('DefiBrainClient', () => {
           }),
         })
       );
+    });
+  });
+
+  describe('chainId management', () => {
+    it('should get chain ID', () => {
+      const client = new DefiBrainClient({
+        apiKey: API_KEY,
+        chainId: 137,
+      });
+
+      expect(client.getChainId()).toBe(137);
+    });
+
+    it('should set chain ID', () => {
+      const client = new DefiBrainClient({
+        apiKey: API_KEY,
+        chainId: 1,
+      });
+
+      client.setChainId(137);
+      expect(client.getChainId()).toBe(137);
     });
   });
 });

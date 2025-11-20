@@ -38,13 +38,154 @@ const tx = await client.executeAction({
 });
 ```
 
-## Features
+## Advanced Usage
 
-- ✅ **Automatic Yield Optimization** - Finds the best protocol automatically
-- ✅ **Optimal Swap Routing** - Best routes for token swaps
-- ✅ **Multi-Protocol Support** - Pendle, Curve, 1inch, Aave, Morpho
-- ✅ **TypeScript Support** - Full type definitions included
-- ✅ **Simple API** - One call replaces 15+ integrations
+### Wallet Integration
+
+```typescript
+import { WalletHelper } from '@defibrain/sdk';
+
+const wallet = new WalletHelper();
+
+// Connect wallet
+const walletInfo = await wallet.connect();
+console.log(`Connected: ${walletInfo.address}`);
+
+// Get balance
+const balance = await wallet.getBalance();
+console.log(`Balance: ${balance} wei`);
+
+// Get token balance
+const usdcBalance = await wallet.getTokenBalance('0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48');
+console.log(`USDC: ${usdcBalance}`);
+```
+
+### Transaction Helper
+
+```typescript
+import { DefiBrainClient, TransactionHelper } from '@defibrain/sdk';
+
+const client = new DefiBrainClient({ apiKey: 'your-key' });
+const wallet = new WalletHelper();
+await wallet.connect();
+
+const txHelper = new TransactionHelper(wallet.getProvider()!, wallet.getChainId());
+
+// Optimize yield
+const result = await client.optimizeYield({
+  asset: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+  amount: '1000000',
+});
+
+// Sign and send transaction
+if (result.transaction) {
+  const txHash = await txHelper.signAndSend(result.transaction);
+  console.log(`Transaction sent: ${txHash}`);
+  
+  // Wait for confirmation
+  const receipt = await txHelper.waitForConfirmation(txHash);
+  console.log(`Confirmed in block: ${receipt.blockNumber}`);
+  
+  // Or do it all in one call
+  // const receipt = await txHelper.signSendAndWait(result.transaction);
+}
+```
+
+### Pendle Helper
+
+```typescript
+import { DefiBrainClient, PendleHelper, TransactionHelper, WalletHelper } from '@defibrain/sdk';
+
+const client = new DefiBrainClient({ apiKey: 'your-key' });
+const wallet = new WalletHelper();
+await wallet.connect();
+
+const txHelper = new TransactionHelper(wallet.getProvider()!, wallet.getChainId());
+const pendleHelper = new PendleHelper(client, txHelper);
+
+// Optimize yield with Pendle
+const result = await pendleHelper.optimizeYieldWithPendle(
+  '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', // USDC
+  '1000000', // 1 USDC
+  'max_yield'
+);
+
+// Swap PT to YT
+const swapResult = await pendleHelper.swapPTtoYT(
+  '0x...', // PT address
+  '1000000',
+  false // Don't execute, just prepare
+);
+
+// Redeem PT at maturity
+const redeemResult = await pendleHelper.redeemPT(
+  '0x...', // PT address
+  '1000000',
+  false
+);
+```
+
+### Aave Helper
+
+```typescript
+import { DefiBrainClient, AaveHelper, TransactionHelper, WalletHelper } from '@defibrain/sdk';
+
+const client = new DefiBrainClient({ apiKey: 'your-key' });
+const wallet = new WalletHelper();
+await wallet.connect();
+
+const txHelper = new TransactionHelper(wallet.getProvider()!, wallet.getChainId());
+const aaveHelper = new AaveHelper(client, txHelper);
+
+// Supply to Aave
+const supplyResult = await aaveHelper.supply(
+  '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', // USDC
+  '1000000', // 1 USDC
+  false // Don't execute, just prepare
+);
+
+// Withdraw from Aave
+const withdrawResult = await aaveHelper.withdraw(
+  '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+  '1000000',
+  false
+);
+```
+
+### Automatic Retry
+
+```typescript
+const client = new DefiBrainClient({
+  apiKey: 'your-key',
+  retryOptions: {
+    maxRetries: 3,
+    initialDelay: 1000,
+    maxDelay: 10000,
+    backoffFactor: 2,
+  },
+});
+
+// All API calls automatically retry on network errors
+const result = await client.optimizeYield({ ... });
+```
+
+### Input Validation
+
+```typescript
+import { validateAddress, validateAmount, formatAmount, parseAmount } from '@defibrain/sdk';
+
+// Validate address
+validateAddress('0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'); // true
+
+// Validate amount
+validateAmount('1000000'); // true
+
+// Format amount (wei to readable)
+formatAmount('1000000000000000000', 18); // "1"
+
+// Parse amount (readable to wei)
+parseAmount('1.5', 18); // "1500000000000000000"
+```
 
 ## Documentation
 
