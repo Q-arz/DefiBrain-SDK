@@ -263,5 +263,225 @@ console.log(`Best option: ${best.protocol} with ${best.estimatedAPR}% APR`);
 
 ---
 
+## Example 11: Using WalletHelper
+
+```typescript
+import { WalletHelper } from '@defibrain/sdk';
+
+const wallet = new WalletHelper();
+
+// Connect wallet
+const walletInfo = await wallet.connect();
+console.log(`Connected: ${walletInfo.address}`);
+console.log(`Chain ID: ${walletInfo.chainId}`);
+
+// Get balances
+const ethBalance = await wallet.getBalance();
+const usdcBalance = await wallet.getTokenBalance('0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48');
+
+console.log(`ETH: ${ethBalance} wei`);
+console.log(`USDC: ${usdcBalance}`);
+```
+
+---
+
+## Example 12: Using TransactionHelper
+
+```typescript
+import { DefiBrainClient, TransactionHelper, WalletHelper } from '@defibrain/sdk';
+
+const client = new DefiBrainClient({ apiKey: 'your-key' });
+const wallet = new WalletHelper();
+await wallet.connect();
+
+const txHelper = new TransactionHelper(wallet.getProvider()!, wallet.getChainId());
+
+// Optimize yield and get transaction
+const result = await client.optimizeYield({
+  asset: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', // USDC
+  amount: '1000000',
+  strategy: 'max_yield',
+});
+
+// Sign and send transaction
+if (result.transaction) {
+  // Option 1: Sign and send, then wait
+  const txHash = await txHelper.signAndSend(result.transaction);
+  console.log(`Transaction sent: ${txHash}`);
+  
+  const receipt = await txHelper.waitForConfirmation(txHash);
+  console.log(`Confirmed in block: ${receipt.blockNumber}`);
+  
+  // Option 2: All in one call
+  // const receipt = await txHelper.signSendAndWait(result.transaction);
+}
+```
+
+---
+
+## Example 13: Using PendleHelper
+
+```typescript
+import { DefiBrainClient, PendleHelper, TransactionHelper, WalletHelper } from '@defibrain/sdk';
+
+const client = new DefiBrainClient({ apiKey: 'your-key' });
+const wallet = new WalletHelper();
+await wallet.connect();
+
+const txHelper = new TransactionHelper(wallet.getProvider()!, wallet.getChainId());
+const pendleHelper = new PendleHelper(client, txHelper);
+
+// Optimize yield with Pendle
+const result = await pendleHelper.optimizeYieldWithPendle(
+  '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', // USDC
+  '1000000', // 1 USDC
+  'max_yield'
+);
+
+// Swap PT to YT (prepare only, don't execute)
+const swapResult = await pendleHelper.swapPTtoYT(
+  '0x...', // Market address
+  '1000000',
+  false // Don't execute, just prepare
+);
+
+// Redeem PT at maturity
+const redeemResult = await pendleHelper.redeemPT(
+  '0x...', // Market address
+  '1000000',
+  false
+);
+```
+
+---
+
+## Example 14: Using AaveHelper
+
+```typescript
+import { DefiBrainClient, AaveHelper, TransactionHelper, WalletHelper } from '@defibrain/sdk';
+
+const client = new DefiBrainClient({ apiKey: 'your-key' });
+const wallet = new WalletHelper();
+await wallet.connect();
+
+const txHelper = new TransactionHelper(wallet.getProvider()!, wallet.getChainId());
+const aaveHelper = new AaveHelper(client, txHelper);
+
+// Supply to Aave (prepare only)
+const supplyResult = await aaveHelper.supply(
+  '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', // USDC
+  '1000000', // 1 USDC
+  false // Don't execute, just prepare
+);
+
+// Withdraw from Aave
+const withdrawResult = await aaveHelper.withdraw(
+  '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+  '1000000',
+  false
+);
+
+// Borrow from Aave
+const borrowResult = await aaveHelper.borrow(
+  '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+  '500000', // 0.5 USDC
+  false
+);
+
+// Repay borrowed amount
+const repayResult = await aaveHelper.repay(
+  '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+  '500000',
+  false
+);
+```
+
+---
+
+## Example 15: Using Validation Helpers
+
+```typescript
+import { validateAddress, validateAmount, formatAmount, parseAmount } from '@defibrain/sdk';
+
+// Validate address
+try {
+  validateAddress('0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'); // true
+  console.log('Valid address');
+} catch (error) {
+  console.error('Invalid address:', error.message);
+}
+
+// Validate amount
+try {
+  validateAmount('1000000'); // true
+  console.log('Valid amount');
+} catch (error) {
+  console.error('Invalid amount:', error.message);
+}
+
+// Format amount (wei to readable)
+const formatted = formatAmount('1000000000000000000', 18); // "1"
+console.log(`Formatted: ${formatted} ETH`);
+
+const formattedUSDC = formatAmount('1000000', 6); // "1"
+console.log(`Formatted: ${formattedUSDC} USDC`);
+
+// Parse amount (readable to wei)
+const parsed = parseAmount('1.5', 18); // "1500000000000000000"
+console.log(`Parsed: ${parsed} wei`);
+
+const parsedUSDC = parseAmount('100', 6); // "100000000"
+console.log(`Parsed: ${parsedUSDC} (USDC)`);
+```
+
+---
+
+## Example 16: Complete Workflow with Helpers
+
+```typescript
+import { 
+  DefiBrainClient, 
+  WalletHelper, 
+  TransactionHelper, 
+  PendleHelper 
+} from '@defibrain/sdk';
+
+async function completeWorkflow() {
+  // 1. Initialize
+  const client = new DefiBrainClient({ apiKey: 'your-key' });
+  const wallet = new WalletHelper();
+  
+  // 2. Connect wallet
+  const walletInfo = await wallet.connect();
+  console.log(`Connected: ${walletInfo.address}`);
+  
+  // 3. Setup transaction helper
+  const txHelper = new TransactionHelper(wallet.getProvider()!, wallet.getChainId());
+  
+  // 4. Setup Pendle helper
+  const pendleHelper = new PendleHelper(client, txHelper);
+  
+  // 5. Optimize yield with Pendle
+  const result = await pendleHelper.optimizeYieldWithPendle(
+    '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', // USDC
+    '1000000',
+    'max_yield'
+  );
+  
+  console.log(`Best option: ${result.protocol} at ${result.estimatedAPR}% APR`);
+  
+  // 6. Execute transaction if ready
+  if (result.transaction) {
+    const receipt = await txHelper.signSendAndWait(result.transaction);
+    console.log(`Transaction confirmed in block ${receipt.blockNumber}`);
+  }
+}
+
+// Run workflow
+completeWorkflow().catch(console.error);
+```
+
+---
+
 **For API reference, see [API.md](./API.md)**
 

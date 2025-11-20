@@ -247,5 +247,157 @@ Check your usage with `getUsageStats()`.
 
 ---
 
+---
+
+## SDK Helpers
+
+The SDK includes powerful helpers to simplify common operations.
+
+### WalletHelper
+
+Connect to MetaMask or other Web3 wallets and manage wallet state.
+
+```typescript
+import { WalletHelper } from '@defibrain/sdk';
+
+const wallet = new WalletHelper();
+
+// Connect wallet
+const walletInfo = await wallet.connect();
+console.log(`Connected: ${walletInfo.address}`);
+
+// Get balances
+const ethBalance = await wallet.getBalance();
+const usdcBalance = await wallet.getTokenBalance('0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48');
+```
+
+**Methods:**
+- `connect(): Promise<WalletInfo>` - Connect to MetaMask or injected wallet
+- `getWalletInfo(): Promise<WalletInfo | null>` - Get current wallet info without requesting connection
+- `getBalance(): Promise<string>` - Get native token balance (ETH) in wei
+- `getTokenBalance(tokenAddress: string): Promise<string>` - Get ERC-20 token balance
+- `getProvider(): WalletProvider | null` - Get the wallet provider instance
+- `getChainId(): number` - Get current chain ID
+
+---
+
+### TransactionHelper
+
+Sign and send transactions directly to the blockchain without going through the backend.
+
+```typescript
+import { TransactionHelper, WalletHelper } from '@defibrain/sdk';
+
+const wallet = new WalletHelper();
+await wallet.connect();
+
+const txHelper = new TransactionHelper(wallet.getProvider()!, wallet.getChainId());
+
+// Sign and send transaction
+if (result.transaction) {
+  const txHash = await txHelper.signAndSend(result.transaction);
+  const receipt = await txHelper.waitForConfirmation(txHash);
+}
+```
+
+**Methods:**
+- `signAndSend(tx: TransactionRequest): Promise<string>` - Sign and send a transaction. Returns transaction hash.
+- `waitForConfirmation(txHash: string, confirmations?: number): Promise<TransactionReceipt>` - Wait for transaction confirmation
+- `signSendAndWait(tx: TransactionRequest, confirmations?: number): Promise<TransactionReceipt>` - Sign, send, and wait for confirmation in one call
+- `estimateGas(tx: TransactionRequest): Promise<string>` - Estimate gas cost for a transaction
+- `getGasPrice(): Promise<string>` - Get current gas price
+
+---
+
+### PendleHelper
+
+Protocol-specific helpers for Pendle PT/YT operations.
+
+```typescript
+import { DefiBrainClient, PendleHelper, TransactionHelper, WalletHelper } from '@defibrain/sdk';
+
+const client = new DefiBrainClient({ apiKey: 'your-key' });
+const wallet = new WalletHelper();
+await wallet.connect();
+
+const txHelper = new TransactionHelper(wallet.getProvider()!, wallet.getChainId());
+const pendleHelper = new PendleHelper(client, txHelper);
+
+// Optimize yield with Pendle
+const result = await pendleHelper.optimizeYieldWithPendle(
+  '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', // USDC
+  '1000000',
+  'max_yield'
+);
+```
+
+**Methods:**
+- `optimizeYieldWithPendle(asset: string, amount: string, strategy?: string): Promise<OptimizeYieldResponse>` - Find best Pendle yield opportunities
+- `swapPTtoYT(market: string, amount: string, execute?: boolean): Promise<any>` - Swap Principal Token (PT) to Yield Token (YT)
+- `swapYTtoPT(market: string, amount: string, execute?: boolean): Promise<any>` - Swap Yield Token (YT) to Principal Token (PT)
+- `redeemPT(market: string, amount: string, execute?: boolean): Promise<any>` - Redeem Principal Token (PT) at maturity
+- `getPTInfo(ptAddress: string): Promise<PendlePTInfo>` - Get information about a Pendle PT token
+- `getYTInfo(ytAddress: string): Promise<PendleYTInfo>` - Get information about a Pendle YT token
+
+---
+
+### AaveHelper
+
+Protocol-specific helpers for Aave V3 lending and borrowing operations.
+
+```typescript
+import { DefiBrainClient, AaveHelper, TransactionHelper, WalletHelper } from '@defibrain/sdk';
+
+const client = new DefiBrainClient({ apiKey: 'your-key' });
+const wallet = new WalletHelper();
+await wallet.connect();
+
+const txHelper = new TransactionHelper(wallet.getProvider()!, wallet.getChainId());
+const aaveHelper = new AaveHelper(client, txHelper);
+
+// Supply to Aave
+const supplyResult = await aaveHelper.supply(
+  '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', // USDC
+  '1000000',
+  false // Don't execute, just prepare
+);
+```
+
+**Methods:**
+- `supply(asset: string, amount: string, execute?: boolean): Promise<any>` - Supply assets to Aave V3
+- `withdraw(asset: string, amount: string, execute?: boolean): Promise<any>` - Withdraw assets from Aave V3
+- `borrow(asset: string, amount: string, execute?: boolean): Promise<any>` - Borrow assets from Aave V3
+- `repay(asset: string, amount: string, execute?: boolean): Promise<any>` - Repay borrowed assets to Aave V3
+
+---
+
+### Validation Helpers
+
+Utility functions for validating addresses and amounts.
+
+```typescript
+import { validateAddress, validateAmount, formatAmount, parseAmount } from '@defibrain/sdk';
+
+// Validate address
+validateAddress('0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'); // true
+
+// Validate amount
+validateAmount('1000000'); // true
+
+// Format amount (wei to readable)
+formatAmount('1000000000000000000', 18); // "1"
+
+// Parse amount (readable to wei)
+parseAmount('1.5', 18); // "1500000000000000000"
+```
+
+**Functions:**
+- `validateAddress(address: string, name?: string): boolean` - Validate Ethereum address format
+- `validateAmount(amount: string, name?: string): boolean` - Validate amount is a valid number string
+- `formatAmount(amount: string, decimals: number): string` - Format amount from wei to readable format
+- `parseAmount(amount: string, decimals: number): string` - Parse amount from readable format to wei
+
+---
+
 **For more examples, see [EXAMPLES.md](./EXAMPLES.md)**
 
