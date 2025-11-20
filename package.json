@@ -1,9 +1,11 @@
 {
   "name": "@defibrain/sdk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "DefiBrain SDK - Unified DeFi Router API Client",
   "main": "dist/index.js",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
+  "type": "module",
   "scripts": {
     "build": "tsc",
     "test": "jest",
