@@ -8,6 +8,7 @@
 import { retry, RetryOptions } from './utils/RetryHelper';
 import { Interface, AbiCoder } from 'ethers';
 import { getDefaultRouterAddress } from './config';
+import { DeFiRouterABI } from './abis';
 
 export type ExecutionMode = "direct" | "managed";
 
@@ -387,12 +388,8 @@ export class DefiBrainClient {
     // This is a simplified version - in production, you'd use proper ABI encoding
     const paramsBytes = this.encodeParams(params);
 
-    // Encode the executeAction call to DeFiRouter
-    // function executeAction(string calldata protocolId, string calldata action, bytes calldata params)
-    const iface = new Interface([
-      "function executeAction(string calldata protocolId, string calldata action, bytes calldata params) external returns (bool success, bytes memory data)"
-    ]);
-
+    // Encode the executeAction call to DeFiRouter using the actual ABI
+    const iface = new Interface(DeFiRouterABI);
     const data = iface.encodeFunctionData("executeAction", [protocol, action, paramsBytes]);
 
     return {

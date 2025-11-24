@@ -1,0 +1,387 @@
+﻿[
+    {
+        "inputs":  [
+                       {
+                           "internalType":  "address",
+                           "name":  "_permissionManager",
+                           "type":  "address"
+                       }
+                   ],
+        "stateMutability":  "nonpayable",
+        "type":  "constructor"
+    },
+    {
+        "anonymous":  false,
+        "inputs":  [
+                       {
+                           "indexed":  true,
+                           "internalType":  "address",
+                           "name":  "tokenAddress",
+                           "type":  "address"
+                       },
+                       {
+                           "indexed":  false,
+                           "internalType":  "uint256",
+                           "name":  "chainId",
+                           "type":  "uint256"
+                       }
+                   ],
+        "name":  "AssetDeactivated",
+        "type":  "event"
+    },
+    {
+        "anonymous":  false,
+        "inputs":  [
+                       {
+                           "indexed":  true,
+                           "internalType":  "address",
+                           "name":  "tokenAddress",
+                           "type":  "address"
+                       },
+                       {
+                           "indexed":  false,
+                           "internalType":  "uint256",
+                           "name":  "chainId",
+                           "type":  "uint256"
+                       },
+                       {
+                           "indexed":  false,
+                           "internalType":  "enum IAssetRegistry.AssetType",
+                           "name":  "assetType",
+                           "type":  "uint8"
+                       },
+                       {
+                           "indexed":  false,
+                           "internalType":  "string",
+                           "name":  "symbol",
+                           "type":  "string"
+                       }
+                   ],
+        "name":  "AssetRegistered",
+        "type":  "event"
+    },
+    {
+        "inputs":  [
+                       {
+                           "internalType":  "address",
+                           "name":  "tokenAddress",
+                           "type":  "address"
+                       },
+                       {
+                           "internalType":  "uint256",
+                           "name":  "chainId",
+                           "type":  "uint256"
+                       }
+                   ],
+        "name":  "deactivateAsset",
+        "outputs":  [
+
+                    ],
+        "stateMutability":  "nonpayable",
+        "type":  "function"
+    },
+    {
+        "inputs":  [
+                       {
+                           "internalType":  "address",
+                           "name":  "tokenAddress",
+                           "type":  "address"
+                       },
+                       {
+                           "internalType":  "uint256",
+                           "name":  "chainId",
+                           "type":  "uint256"
+                       }
+                   ],
+        "name":  "getAsset",
+        "outputs":  [
+                        {
+                            "components":  [
+                                               {
+                                                   "internalType":  "address",
+                                                   "name":  "tokenAddress",
+                                                   "type":  "address"
+                                               },
+                                               {
+                                                   "internalType":  "string",
+                                                   "name":  "symbol",
+                                                   "type":  "string"
+                                               },
+                                               {
+                                                   "internalType":  "string",
+                                                   "name":  "name",
+                                                   "type":  "string"
+                                               },
+                                               {
+                                                   "internalType":  "uint8",
+                                                   "name":  "decimals",
+                                                   "type":  "uint8"
+                                               },
+                                               {
+                                                   "internalType":  "enum IAssetRegistry.AssetType",
+                                                   "name":  "assetType",
+                                                   "type":  "uint8"
+                                               },
+                                               {
+                                                   "internalType":  "uint256",
+                                                   "name":  "chainId",
+                                                   "type":  "uint256"
+                                               },
+                                               {
+                                                   "internalType":  "string",
+                                                   "name":  "protocol",
+                                                   "type":  "string"
+                                               },
+                                               {
+                                                   "internalType":  "bool",
+                                                   "name":  "isActive",
+                                                   "type":  "bool"
+                                               }
+                                           ],
+                            "internalType":  "struct IAssetRegistry.Asset",
+                            "name":  "asset",
+                            "type":  "tuple"
+                        },
+                        {
+                            "internalType":  "bool",
+                            "name":  "exists",
+                            "type":  "bool"
+                        }
+                    ],
+        "stateMutability":  "view",
+        "type":  "function"
+    },
+    {
+        "inputs":  [
+
+                   ],
+        "name":  "getAssetCount",
+        "outputs":  [
+                        {
+                            "internalType":  "uint256",
+                            "name":  "count",
+                            "type":  "uint256"
+                        }
+                    ],
+        "stateMutability":  "view",
+        "type":  "function"
+    },
+    {
+        "inputs":  [
+                       {
+                           "internalType":  "string",
+                           "name":  "protocol",
+                           "type":  "string"
+                       }
+                   ],
+        "name":  "getAssetsByProtocol",
+        "outputs":  [
+                        {
+                            "components":  [
+                                               {
+                                                   "internalType":  "address",
+                                                   "name":  "tokenAddress",
+                                                   "type":  "address"
+                                               },
+                                               {
+                                                   "internalType":  "string",
+                                                   "name":  "symbol",
+                                                   "type":  "string"
+                                               },
+                                               {
+                                                   "internalType":  "string",
+                                                   "name":  "name",
+                                                   "type":  "string"
+                                               },
+                                               {
+                                                   "internalType":  "uint8",
+                                                   "name":  "decimals",
+                                                   "type":  "uint8"
+                                               },
+                                               {
+                                                   "internalType":  "enum IAssetRegistry.AssetType",
+                                                   "name":  "assetType",
+                                                   "type":  "uint8"
+                                               },
+                                               {
+                                                   "internalType":  "uint256",
+                                                   "name":  "chainId",
+                                                   "type":  "uint256"
+                                               },
+                                               {
+                                                   "internalType":  "string",
+                                                   "name":  "protocol",
+                                                   "type":  "string"
+                                               },
+                                               {
+                                                   "internalType":  "bool",
+                                                   "name":  "isActive",
+                                                   "type":  "bool"
+                                               }
+                                           ],
+                            "internalType":  "struct IAssetRegistry.Asset[]",
+                            "name":  "assetsArray",
+                            "type":  "tuple[]"
+                        }
+                    ],
+        "stateMutability":  "view",
+        "type":  "function"
+    },
+    {
+        "inputs":  [
+                       {
+                           "internalType":  "enum IAssetRegistry.AssetType",
+                           "name":  "assetType",
+                           "type":  "uint8"
+                       }
+                   ],
+        "name":  "getAssetsByType",
+        "outputs":  [
+                        {
+                            "components":  [
+                                               {
+                                                   "internalType":  "address",
+                                                   "name":  "tokenAddress",
+                                                   "type":  "address"
+                                               },
+                                               {
+                                                   "internalType":  "string",
+                                                   "name":  "symbol",
+                                                   "type":  "string"
+                                               },
+                                               {
+                                                   "internalType":  "string",
+                                                   "name":  "name",
+                                                   "type":  "string"
+                                               },
+                                               {
+                                                   "internalType":  "uint8",
+                                                   "name":  "decimals",
+                                                   "type":  "uint8"
+                                               },
+                                               {
+                                                   "internalType":  "enum IAssetRegistry.AssetType",
+                                                   "name":  "assetType",
+                                                   "type":  "uint8"
+                                               },
+                                               {
+                                                   "internalType":  "uint256",
+                                                   "name":  "chainId",
+                                                   "type":  "uint256"
+                                               },
+                                               {
+                                                   "internalType":  "string",
+                                                   "name":  "protocol",
+                                                   "type":  "string"
+                                               },
+                                               {
+                                                   "internalType":  "bool",
+                                                   "name":  "isActive",
+                                                   "type":  "bool"
+                                               }
+                                           ],
+                            "internalType":  "struct IAssetRegistry.Asset[]",
+                            "name":  "assetsArray",
+                            "type":  "tuple[]"
+                        }
+                    ],
+        "stateMutability":  "view",
+        "type":  "function"
+    },
+    {
+        "inputs":  [
+                       {
+                           "internalType":  "address",
+                           "name":  "tokenAddress",
+                           "type":  "address"
+                       },
+                       {
+                           "internalType":  "uint256",
+                           "name":  "chainId",
+                           "type":  "uint256"
+                       }
+                   ],
+        "name":  "isAssetRegistered",
+        "outputs":  [
+                        {
+                            "internalType":  "bool",
+                            "name":  "isRegistered",
+                            "type":  "bool"
+                        }
+                    ],
+        "stateMutability":  "view",
+        "type":  "function"
+    },
+    {
+        "inputs":  [
+
+                   ],
+        "name":  "permissionManager",
+        "outputs":  [
+                        {
+                            "internalType":  "contract IPermissionManager",
+                            "name":  "",
+                            "type":  "address"
+                        }
+                    ],
+        "stateMutability":  "view",
+        "type":  "function"
+    },
+    {
+        "inputs":  [
+                       {
+                           "components":  [
+                                              {
+                                                  "internalType":  "address",
+                                                  "name":  "tokenAddress",
+                                                  "type":  "address"
+                                              },
+                                              {
+                                                  "internalType":  "string",
+                                                  "name":  "symbol",
+                                                  "type":  "string"
+                                              },
+                                              {
+                                                  "internalType":  "string",
+                                                  "name":  "name",
+                                                  "type":  "string"
+                                              },
+                                              {
+                                                  "internalType":  "uint8",
+                                                  "name":  "decimals",
+                                                  "type":  "uint8"
+                                              },
+                                              {
+                                                  "internalType":  "enum IAssetRegistry.AssetType",
+                                                  "name":  "assetType",
+                                                  "type":  "uint8"
+                                              },
+                                              {
+                                                  "internalType":  "uint256",
+                                                  "name":  "chainId",
+                                                  "type":  "uint256"
+                                              },
+                                              {
+                                                  "internalType":  "string",
+                                                  "name":  "protocol",
+                                                  "type":  "string"
+                                              },
+                                              {
+                                                  "internalType":  "bool",
+                                                  "name":  "isActive",
+                                                  "type":  "bool"
+                                              }
+                                          ],
+                           "internalType":  "struct IAssetRegistry.Asset",
+                           "name":  "asset",
+                           "type":  "tuple"
+                       }
+                   ],
+        "name":  "registerAsset",
+        "outputs":  [
+
+                    ],
+        "stateMutability":  "nonpayable",
+        "type":  "function"
+    }
+]

@@ -8,6 +8,20 @@ Official TypeScript/JavaScript SDK for the DefiBrain API - A unified DeFi router
 npm install @defibrain/sdk
 ```
 
+## 📄 Smart Contracts
+
+Este SDK incluye los contratos inteligentes core de DefiBrain:
+
+- **DeFiRouter** - Router principal para ejecutar acciones en batch
+- **PermissionManager** - Control de permisos y acceso
+- **AssetRegistry** - Registro de assets soportados
+
+Los contratos están disponibles en:
+- **Código fuente**: `contracts/` (Solidity)
+- **ABIs**: `abis/` (JSON)
+
+Ver [CONTRACTS.md](./CONTRACTS.md) para más información sobre cómo usar los contratos.
+
 ## Quick Start
 
 ```typescript
