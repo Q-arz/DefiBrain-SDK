@@ -10,17 +10,18 @@ npm install @defibrain/sdk
 
 ## 📄 Smart Contracts
 
-Este SDK incluye los contratos inteligentes core de DefiBrain:
+This SDK includes the core smart contracts of DefiBrain:
 
-- **DeFiRouter** - Router principal para ejecutar acciones en batch
-- **PermissionManager** - Control de permisos y acceso
-- **AssetRegistry** - Registro de assets soportados
+- **DeFiRouter** - Main router for executing batch actions
+- **PermissionManager** - Permission and access control
+- **AssetRegistry** - Registry of supported assets
+- **AaveAdapter** - Example adapter implementation
 
-Los contratos están disponibles en:
-- **Código fuente**: `contracts/` (Solidity)
+Contracts are available in:
+- **Source code**: `contracts/` (Solidity)
 - **ABIs**: `abis/` (JSON)
 
-Ver [CONTRACTS.md](./CONTRACTS.md) para más información sobre cómo usar los contratos.
+See [docs/CONTRACTS.md](./docs/CONTRACTS.md) for detailed information on how to use the contracts.
 
 ## Quick Start
 
@@ -219,4 +220,3 @@ MIT License - This SDK is open source.
 - Documentation: https://defibrain.oxg.fi/docs.html
 - Discord: https://discord.gg/TU724DzWpV
 - Website: https://defibrain.oxg.fi
-
