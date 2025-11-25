@@ -85,14 +85,6 @@ Router principal que ejecuta acciones en diferentes protocolos DeFi.
 - `registerAdapter(protocolId, adapterAddress)` - Registra un adapter
 - `getAdapter(protocolId)` - Obtiene la dirección del adapter
 
-### AaveAdapter
-Adapter de ejemplo para interactuar con Aave V3. Muestra cómo implementar un adapter compatible con DeFiRouter.
-
-**Funciones principales:**
-- `execute(action, params)` - Ejecuta una acción en Aave (supply, withdraw, borrow, repay)
-
-**Nota:** Este es un ejemplo de implementación. Puedes crear tus propios adapters siguiendo este patrón.
-
 ### PermissionManager
 Gestión de permisos y control de acceso basado en roles.
 
@@ -109,6 +101,37 @@ Registro centralizado de assets soportados.
 - `getAsset(tokenAddress, chainId)` - Obtiene información de un asset
 - `getAssetsByProtocol(protocol)` - Lista assets por protocolo
 
+### AaveAdapter
+Adapter de ejemplo para interactuar con Aave V3. Muestra cómo implementar un adapter compatible con DeFiRouter.
+
+**Funciones principales:**
+- `execute(action, params)` - Ejecuta una acción en Aave (supply, withdraw, borrow, repay)
+
+**Nota:** Este es un ejemplo de implementación. Puedes crear tus propios adapters siguiendo este patrón.
+
+## 🔌 Crear Adapters Personalizados
+
+Para crear un adapter personalizado, implementa la función `execute(string, bytes)`:
+
+```solidity
+contract MyCustomAdapter {
+    function execute(
+        string calldata action,
+        bytes calldata params
+    ) external returns (bool success, bytes memory data) {
+        // Tu lógica aquí
+        // Decodifica params según la acción
+        // Llama al protocolo correspondiente
+        // Retorna success y data
+    }
+}
+```
+
+Luego regístralo en el DeFiRouter:
+```solidity
+router.registerAdapter("my-protocol", myAdapterAddress);
+```
+
 ## 🚀 Deployment
 
 Los contratos deben desplegarse en la blockchain antes de usar el modo "managed". Ver documentación de deployment en el repo principal.
@@ -117,9 +140,6 @@ Los contratos deben desplegarse en la blockchain antes de usar el modo "managed"
 
 - **Código fuente**: `sdk/contracts/`
 - **ABIs**: `sdk/abis/`
-- **Documentación completa**: Ver README del repo principal
+- **Documentación**: Ver repo principal `docs/CONTRACTS_IMPLEMENTATION.md`
 
----
-
-**Última actualización**: Noviembre 2024
 
