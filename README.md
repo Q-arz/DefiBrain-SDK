@@ -21,7 +21,7 @@ Contracts are available in:
 - **Source code**: `contracts/` (Solidity)
 - **ABIs**: `abis/` (JSON)
 
-See [docs/CONTRACTS.md](./docs/CONTRACTS.md) for detailed information on how to use the contracts.
+See [docs/EN/CONTRACTS.md](./docs/EN/CONTRACTS.md) for detailed information on how to use the contracts.
 
 ## Quick Start
 
@@ -216,15 +216,23 @@ parseAmount('1.5', 18); // "1500000000000000000"
 - **Type Safety**: Full TypeScript support with strong typing
 - **Protocol Helpers**: Simple, protocol-specific APIs (AaveHelper, PendleHelper, etc.)
 
-**See [How to Integrate a Protocol](../docs/EN/HOW_TO_INTEGRATE_PROTOCOL.md) for details.**
+**See [How to Integrate a Protocol](../docs/documentation/EN/HOW_TO_INTEGRATE_PROTOCOL.md) for details.**
 
 ## Documentation
 
-- **[API Reference](./docs/API.md)** - Complete API documentation
-- **[Examples](./docs/EXAMPLES.md)** - Usage examples and code samples
-- **[Configuration](./docs/CONFIGURATION.md)** - Setup and configuration guide
-- **[How to Integrate a Protocol](../docs/EN/HOW_TO_INTEGRATE_PROTOCOL.md)** - Guide for adding new protocols
-- **[Documentation Index](./docs/README.md)** - Full documentation index
+- **[API Reference](./docs/EN/API.md)** - Complete API documentation
+- **[Examples](./docs/EN/EXAMPLES.md)** - Usage examples and code samples
+- **[Configuration](./docs/EN/CONFIGURATION.md)** - Setup and configuration guide
+- **[How to Integrate a Protocol](../docs/documentation/EN/HOW_TO_INTEGRATE_PROTOCOL.md)** - Guide for adding new protocols
+- **[Documentation Index](./docs/EN/README.md)** - Full documentation index
+
+Spanish summaries:
+
+- `./docs/ES/README.md` – índice y resumen en español
+- `./docs/ES/API.md` – resumen de la API
+- `./docs/ES/CONFIGURATION.md` – configuración básica
+- `./docs/ES/EXAMPLES.md` – ejemplos rápidos
+- `./docs/ES/CONTRACTS.md` – contratos incluidos en el SDK
 
 Full documentation also available at: https://defibrain.oxg.fi/docs.html
 
