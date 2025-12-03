@@ -1,6 +1,6 @@
 {
   "name": "@defibrain/sdk",
-  "version": "0.1.3",
+  "version": "0.1.5",
   "description": "DefiBrain SDK - Unified DeFi Router API Client",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -8,7 +8,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "test": "jest",
+    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config jest.config.cjs",
     "prepublishOnly": "npm run build"
   },
   "keywords": [

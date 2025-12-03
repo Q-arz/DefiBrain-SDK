@@ -163,12 +163,6 @@ describe('DefiBrainClient', () => {
             Authorization: `Bearer ${API_KEY}`,
             'Content-Type': 'application/json',
           }),
-          body: JSON.stringify({
-            asset: '0x...',
-            amount: '1000000000000000000',
-            strategy: 'balanced',
-            chainId: 1,
-          }),
         })
       );
     });

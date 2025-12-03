@@ -202,11 +202,28 @@ formatAmount('1000000000000000000', 18); // "1"
 parseAmount('1.5', 18); // "1500000000000000000"
 ```
 
+## Why DefiBrain?
+
+### For End Users
+- **Auto-Optimization**: Automatically finds the best yield across multiple protocols
+- **Simple API**: One unified interface for all DeFi protocols
+- **Batch Operations**: Execute multiple actions in a single transaction
+- **Gas Optimization**: Built-in gas estimation and optimization
+
+### For Developers
+- **Easy Integration**: Add new protocols with ~70% less code
+- **Reusable Infrastructure**: No need to rebuild common functionality
+- **Type Safety**: Full TypeScript support with strong typing
+- **Protocol Helpers**: Simple, protocol-specific APIs (AaveHelper, PendleHelper, etc.)
+
+**See [How to Integrate a Protocol](../docs/EN/HOW_TO_INTEGRATE_PROTOCOL.md) for details.**
+
 ## Documentation
 
 - **[API Reference](./docs/API.md)** - Complete API documentation
 - **[Examples](./docs/EXAMPLES.md)** - Usage examples and code samples
 - **[Configuration](./docs/CONFIGURATION.md)** - Setup and configuration guide
+- **[How to Integrate a Protocol](../docs/EN/HOW_TO_INTEGRATE_PROTOCOL.md)** - Guide for adding new protocols
 - **[Documentation Index](./docs/README.md)** - Full documentation index
 
 Full documentation also available at: https://defibrain.oxg.fi/docs.html

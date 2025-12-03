@@ -75,7 +75,8 @@ Finds the optimal swap route between two tokens.
 - `tokenOut` (string): Output token address
 - `amount` (string): Amount to swap
 - `slippage` (optional): Maximum slippage percentage (default: 0.5)
-- `preferProtocol` (optional): Preferred protocol (e.g., "1inch", "curve")
+- `preferProtocol` (optional): Preferred protocol (e.g., `"1inch"`, `"curve"`, `"uniswap"`)
+- `oneInchApiKey` (optional): 1inch API key. If provided, the backend will try to use 1inch for this request. If omitted, 1inch will be skipped and internal DEX routes (Uniswap, Curve, etc.) will be used.
 
 **Returns:**
 ```typescript
@@ -103,7 +104,9 @@ const swap = await client.findOptimalSwap({
   tokenIn: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', // USDC
   tokenOut: '0xdAC17F958D2ee523a2206206994597C13D831ec7', // USDT
   amount: '1000000', // 1 USDC
-  slippage: 0.5
+  slippage: 0.5,
+  // Optional: use 1inch only when the user provides an API key
+  oneInchApiKey: process.env.ONEINCH_API_KEY, // or user-provided key
 });
 ```
 

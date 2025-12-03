@@ -1,17 +1,22 @@
 /**
- * Aave Helper - Protocol-specific helpers for Aave V3
- * 
- * Simple helpers for Aave operations
+ * Morpho Helper - Helpers específicos para Morpho Blue
+ *
+ * Thin wrapper sobre DefiBrainClient para operaciones comunes de Morpho.
  */
 
 import { DefiBrainClient, ExecuteActionResponse } from '../DefiBrainClient';
 import { TransactionHelper } from '../utils/TransactionHelper';
 import { validateAddress, validateAmount } from '../utils/ValidationHelper';
 
-/**
- * Aave Helper - Easy Aave operations
- */
-export class AaveHelper {
+export interface MorphoActionParams {
+  marketId: string;
+  assets: string; // amount in smallest units
+  onBehalfOf?: string;
+  receiver?: string;
+  data?: string;
+}
+
+export class MorphoHelper {
   private client: DefiBrainClient;
   private txHelper: TransactionHelper | null = null;
 
@@ -28,25 +33,28 @@ export class AaveHelper {
   }
 
   /**
-   * Supply assets to Aave
-   * Simple way to supply tokens to Aave
+   * Supply assets to a Morpho Blue market
    */
   async supply(
-    asset: string,
-    amount: string,
+    marketId: string,
+    assets: string,
+    onBehalfOf?: string,
     execute: boolean = false
   ): Promise<ExecuteActionResponse & { txHash?: string }> {
-    validateAddress(asset, 'Asset');
-    validateAmount(amount, 'Amount');
+    this.ensureTxHelperIfExecute(execute);
 
-    if (!this.txHelper && execute) {
-      throw new Error('Transaction helper not set. Call setTransactionHelper() first.');
-    }
+    validateAmount(assets, 'Assets');
+
+    const params: MorphoActionParams = {
+      marketId,
+      assets,
+      onBehalfOf,
+    };
 
     const result = await this.client.executeAction({
-      protocol: 'aave',
+      protocol: 'morpho',
       action: 'supply',
-      params: { asset, amount },
+      params,
     });
 
     if (execute && result.transaction && this.txHelper) {
@@ -63,24 +71,32 @@ export class AaveHelper {
   }
 
   /**
-   * Withdraw assets from Aave
+   * Withdraw assets from a Morpho Blue market
    */
   async withdraw(
-    asset: string,
-    amount: string,
+    marketId: string,
+    assets: string,
+    receiver?: string,
+    onBehalfOf?: string,
     execute: boolean = false
   ): Promise<ExecuteActionResponse & { txHash?: string }> {
-    validateAddress(asset, 'Asset');
-    validateAmount(amount, 'Amount');
+    this.ensureTxHelperIfExecute(execute);
 
-    if (!this.txHelper && execute) {
-      throw new Error('Transaction helper not set. Call setTransactionHelper() first.');
-    }
+    validateAmount(assets, 'Assets');
+    if (receiver) validateAddress(receiver, 'Receiver');
+    if (onBehalfOf) validateAddress(onBehalfOf, 'OnBehalfOf');
+
+    const params: MorphoActionParams = {
+      marketId,
+      assets,
+      receiver,
+      onBehalfOf,
+    };
 
     const result = await this.client.executeAction({
-      protocol: 'aave',
+      protocol: 'morpho',
       action: 'withdraw',
-      params: { asset, amount },
+      params,
     });
 
     if (execute && result.transaction && this.txHelper) {
@@ -97,24 +113,32 @@ export class AaveHelper {
   }
 
   /**
-   * Borrow assets from Aave
+   * Borrow assets from a Morpho Blue market
    */
   async borrow(
-    asset: string,
-    amount: string,
+    marketId: string,
+    assets: string,
+    receiver?: string,
+    onBehalfOf?: string,
     execute: boolean = false
   ): Promise<ExecuteActionResponse & { txHash?: string }> {
-    validateAddress(asset, 'Asset');
-    validateAmount(amount, 'Amount');
+    this.ensureTxHelperIfExecute(execute);
 
-    if (!this.txHelper && execute) {
-      throw new Error('Transaction helper not set. Call setTransactionHelper() first.');
-    }
+    validateAmount(assets, 'Assets');
+    if (receiver) validateAddress(receiver, 'Receiver');
+    if (onBehalfOf) validateAddress(onBehalfOf, 'OnBehalfOf');
+
+    const params: MorphoActionParams = {
+      marketId,
+      assets,
+      receiver,
+      onBehalfOf,
+    };
 
     const result = await this.client.executeAction({
-      protocol: 'aave',
+      protocol: 'morpho',
       action: 'borrow',
-      params: { asset, amount },
+      params,
     });
 
     if (execute && result.transaction && this.txHelper) {
@@ -131,24 +155,29 @@ export class AaveHelper {
   }
 
   /**
-   * Repay borrowed assets
+   * Repay a borrow on Morpho Blue
    */
   async repay(
-    asset: string,
-    amount: string,
+    marketId: string,
+    assets: string,
+    onBehalfOf?: string,
     execute: boolean = false
   ): Promise<ExecuteActionResponse & { txHash?: string }> {
-    validateAddress(asset, 'Asset');
-    validateAmount(amount, 'Amount');
+    this.ensureTxHelperIfExecute(execute);
 
-    if (!this.txHelper && execute) {
-      throw new Error('Transaction helper not set. Call setTransactionHelper() first.');
-    }
+    validateAmount(assets, 'Assets');
+    if (onBehalfOf) validateAddress(onBehalfOf, 'OnBehalfOf');
+
+    const params: MorphoActionParams = {
+      marketId,
+      assets,
+      onBehalfOf,
+    };
 
     const result = await this.client.executeAction({
-      protocol: 'aave',
+      protocol: 'morpho',
       action: 'repay',
-      params: { asset, amount },
+      params,
     });
 
     if (execute && result.transaction && this.txHelper) {
@@ -163,5 +192,12 @@ export class AaveHelper {
 
     return result;
   }
+
+  private ensureTxHelperIfExecute(execute: boolean): void {
+    if (execute && !this.txHelper) {
+      throw new Error('Transaction helper not set. Call setTransactionHelper() first.');
+    }
+  }
 }
+
 

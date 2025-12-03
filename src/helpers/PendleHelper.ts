@@ -4,7 +4,7 @@
  * Simple helpers for Pendle PT/YT operations
  */
 
-import { DefiBrainClient } from '../DefiBrainClient';
+import { DefiBrainClient, OptimizeYieldResponse, ExecuteActionResponse } from '../DefiBrainClient';
 import { TransactionHelper, TransactionRequest } from '../utils/TransactionHelper';
 import { validateAddress, validateAmount } from '../utils/ValidationHelper';
 
@@ -49,7 +49,7 @@ export class PendleHelper {
     asset: string,
     amount: string,
     strategy: 'max_yield' | 'min_risk' | 'balanced' = 'max_yield'
-  ) {
+  ): Promise<OptimizeYieldResponse> {
     validateAddress(asset, 'Asset');
     validateAmount(amount, 'Amount');
 
@@ -81,7 +81,7 @@ export class PendleHelper {
       params: { ptAddress },
     });
 
-    return result as any as PendlePTInfo;
+    return result as unknown as PendlePTInfo;
   }
 
   /**
@@ -96,14 +96,18 @@ export class PendleHelper {
       params: { ytAddress },
     });
 
-    return result as any as PendleYTInfo;
+    return result as unknown as PendleYTInfo;
   }
 
   /**
    * Swap PT to YT
    * Simple way to swap Principal Token to Yield Token
    */
-  async swapPTtoYT(ptAddress: string, amount: string, execute: boolean = false) {
+  async swapPTtoYT(
+    ptAddress: string,
+    amount: string,
+    execute: boolean = false
+  ): Promise<ExecuteActionResponse & { txHash?: string }> {
     validateAddress(ptAddress, 'PT Address');
     validateAmount(amount, 'Amount');
 
@@ -117,8 +121,8 @@ export class PendleHelper {
       params: { ptAddress, amount },
     });
 
-    if (execute && (result as any).transaction) {
-      const tx = (result as any).transaction;
+    if (execute && result.transaction) {
+      const tx = result.transaction as TransactionRequest;
       const txHash = await this.txHelper.signAndSend({
         to: tx.to,
         data: tx.data,
@@ -134,7 +138,11 @@ export class PendleHelper {
    * Swap YT to PT
    * Simple way to swap Yield Token to Principal Token
    */
-  async swapYTtoPT(ytAddress: string, amount: string, execute: boolean = false) {
+  async swapYTtoPT(
+    ytAddress: string,
+    amount: string,
+    execute: boolean = false
+  ): Promise<ExecuteActionResponse & { txHash?: string }> {
     validateAddress(ytAddress, 'YT Address');
     validateAmount(amount, 'Amount');
 
@@ -148,8 +156,8 @@ export class PendleHelper {
       params: { ytAddress, amount },
     });
 
-    if (execute && (result as any).transaction) {
-      const tx = (result as any).transaction;
+    if (execute && result.transaction) {
+      const tx = result.transaction as TransactionRequest;
       const txHash = await this.txHelper.signAndSend({
         to: tx.to,
         data: tx.data,
@@ -165,7 +173,11 @@ export class PendleHelper {
    * Redeem PT at maturity
    * Simple way to redeem Principal Token when it matures
    */
-  async redeemPT(ptAddress: string, amount: string, execute: boolean = false) {
+  async redeemPT(
+    ptAddress: string,
+    amount: string,
+    execute: boolean = false
+  ): Promise<ExecuteActionResponse & { txHash?: string }> {
     validateAddress(ptAddress, 'PT Address');
     validateAmount(amount, 'Amount');
 
@@ -179,8 +191,8 @@ export class PendleHelper {
       params: { ptAddress, amount },
     });
 
-    if (execute && (result as any).transaction) {
-      const tx = (result as any).transaction;
+    if (execute && result.transaction) {
+      const tx = result.transaction as TransactionRequest;
       const txHash = await this.txHelper.signAndSend({
         to: tx.to,
         data: tx.data,
@@ -196,7 +208,7 @@ export class PendleHelper {
    * Estimate yield for YT
    * Get estimated yield for a Yield Token
    */
-  async estimateYield(ytAddress: string) {
+  async estimateYield(ytAddress: string): Promise<ExecuteActionResponse> {
     validateAddress(ytAddress, 'YT Address');
 
     const result = await this.client.executeAction({

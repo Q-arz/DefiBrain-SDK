@@ -85,6 +85,23 @@ const yieldResult = await client.optimizeYield({
 });
 ```
 
+## Example 3b: Using 1inch with a user-provided API key
+
+```typescript
+const oneInchApiKey = process.env.ONEINCH_API_KEY; // or any user-provided key
+
+const swapWith1inch = await client.findOptimalSwap({
+  tokenIn: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', // USDC
+  tokenOut: '0xdAC17F958D2ee523a2206206994597C13D831ec7', // USDT
+  amount: '1000000',
+  slippage: 0.5,
+  preferProtocol: '1inch',
+  oneInchApiKey, // 1inch will only be used if this key is provided
+});
+
+console.log(`Best swap via 1inch: ${swapWith1inch.route.estimatedAmount}`);
+```
+
 ## Example 4: Monitor Health and Usage
 
 ```typescript

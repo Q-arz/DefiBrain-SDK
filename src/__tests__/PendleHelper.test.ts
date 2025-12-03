@@ -136,6 +136,46 @@ describe('PendleHelper', () => {
     });
   });
 
+  describe('swapYTtoPT & redeemPT', () => {
+    it('should perform swapYTtoPT without executing', async () => {
+      global.fetch = jest.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          transactionHash: '',
+          protocol: 'pendle',
+          action: 'swapYTtoPT',
+          status: 'pending',
+        }),
+      });
+
+      const result = await pendleHelper.swapYTtoPT('0x' + '2'.repeat(40), '500000', false);
+      expect(result.action).toBe('swapYTtoPT');
+      expect(mockTxHelper.signAndSend).not.toHaveBeenCalled();
+    });
+
+    it('should perform redeemPT with execute=true', async () => {
+      global.fetch = jest.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          transactionHash: '',
+          protocol: 'pendle',
+          action: 'redeemPT',
+          status: 'pending',
+          transaction: {
+            to: '0xcontract',
+            data: '0xdata',
+            value: '0x0',
+          },
+        }),
+      });
+
+      const result = await pendleHelper.redeemPT('0x' + '3'.repeat(40), '750000', true);
+      expect(result.action).toBe('redeemPT');
+      expect(result.txHash).toBe('0xtxhash');
+      expect(mockTxHelper.signAndSend).toHaveBeenCalled();
+    });
+  });
+
   describe('validation', () => {
     it('should validate address', async () => {
       await expect(

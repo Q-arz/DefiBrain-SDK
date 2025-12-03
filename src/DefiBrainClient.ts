@@ -9,6 +9,7 @@ import { retry, RetryOptions } from './utils/RetryHelper';
 import { Interface, AbiCoder } from 'ethers';
 import { getDefaultRouterAddress } from './config';
 import { DeFiRouterABI } from './abis';
+import type { TransactionRequest } from './utils/TransactionHelper';
 
 export type ExecutionMode = "direct" | "managed";
 
@@ -50,6 +51,12 @@ export interface FindSwapRequest {
   amount: string;
   slippage?: number;
   preferProtocol?: string;
+  /**
+   * Optional 1inch API key.
+   * If provided, the backend will try to use 1inch for this request.
+   * If omitted, 1inch will be skipped and fallbacks (Uniswap, Curve, etc.) will be used.
+   */
+  oneInchApiKey?: string;
 }
 
 export interface FindSwapResponse {
@@ -69,39 +76,54 @@ export interface FindSwapResponse {
   };
 }
 
-export interface ExecuteActionRequest {
+export interface ExecuteActionRequest<TParams = Record<string, any>> {
   protocol: string;
   action: string;
-  params: Record<string, any>;
+  params: TParams;
 }
 
 export interface ExecuteActionResponse {
-  transactionHash: string;
   protocol: string;
   action: string;
-  status: "pending" | "confirmed" | "failed";
+  status?: "pending" | "confirmed" | "failed";
+  /**
+   * Optional transaction hash if the backend already executed something on-chain
+   * (in most SDK flows this will be undefined and the dApp signs the tx).
+   */
+  transactionHash?: string;
+  /**
+   * Optional transaction payload to be signed by the user.
+   */
+  transaction?: TransactionRequest;
+  /**
+   * Allow backend to attach extra fields without breaking typings.
+   */
+  [key: string]: any;
 }
 
-export interface ExecuteBatchRequest {
+export interface ExecuteBatchRequest<TParams = Record<string, any>> {
   actions: Array<{
     protocol: string;
     action: string;
-    params: Record<string, any>;
+    params: TParams;
   }>;
 }
 
 export interface ExecuteBatchResponse {
-  transactionHash: string;
   status: "pending" | "confirmed" | "failed";
-  transaction?: {
-    to: string;
-    data: string;
-    value?: string;
-  };
+  /**
+   * Transaction payload for the batch (to be signed by the user).
+   */
+  transaction?: TransactionRequest;
+  /**
+   * Optional transaction hash if the batch was already executed server‑side.
+   */
+  transactionHash?: string;
   results?: Array<{
     protocol: string;
     action: string;
     success: boolean;
+    [key: string]: any;
   }>;
 }
 
@@ -153,6 +175,8 @@ export class DefiBrainClient {
         body: JSON.stringify({
           ...request,
           chainId: this.chainId,
+          // In 0.1.x optimizeYield is effectively treated as direct mode:
+          // mode/routerAddress are sent only for forward compatibility.
           mode: this.mode,
           routerAddress: this.routerAddress,
         }),
@@ -164,16 +188,7 @@ export class DefiBrainClient {
       }
 
       const result = await response.json() as OptimizeYieldResponse;
-      
-      // If managed mode, modify transaction to point to router
-      if (this.mode === "managed" && result.transaction && this.routerAddress) {
-        result.transaction = this.buildManagedTransaction(
-          result.protocol,
-          result.action,
-          result.params
-        );
-      }
-
+      // In 0.1.x we do not rewrite the transaction for managed mode here.
       return result;
     }, this.retryOptions);
   }
